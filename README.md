@@ -20,7 +20,12 @@ t:
 	@echo
 	$(save) hello=SGVsbG8gZnJvbSBFTkNPREVE
 	@echo "the encoded message: `./make-tools -l hello | base64 -d`"
+	make y
+	
 ```
+
+y:
+	echo 123
 
 ```shell
 ❯ make t
