@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/rs/zerolog v1.26.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
+	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
 )
 
 require (

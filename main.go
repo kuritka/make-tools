@@ -20,6 +20,8 @@ var (
 	save = app.Flag("save","").Short('s').String()
 	load = app.Flag("load","").Short('l').String()
 	initialize = app.Flag("init","").Short('i').Bool()
+	helmver = app.Flag("get-helm-version","Prints helm version from Chart.yaml").String()
+	appver = app.Flag("get-helm-appversion","Prints helm app version from Chart.yaml").String()
 )
 
 var log = zerolog.Logger()
@@ -41,4 +43,11 @@ func main(){
 	if tools.Initialize(*initialize, *message) {
 		return
 	}
+	if tools.HelmVer(*helmver) {
+		return
+	}
+	if tools.HelmAppVer(*appver) {
+		return
+	}
+
 }

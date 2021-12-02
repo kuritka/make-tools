@@ -5,6 +5,8 @@ import (
 	"github.com/MakeTools/internal/providers/storage/tempstore"
 	"github.com/MakeTools/internal/utils/zerolog"
 	"gopkg.in/alecthomas/kingpin.v2"
+	"gopkg.in/yaml.v3"
+	"io/ioutil"
 	"os"
 	"strings"
 )
@@ -65,6 +67,44 @@ func Initialize(initialize bool, message string) bool {
 	return true
 }
 
+func HelmVer(path string) bool {
+	if path == "" {
+		return false
+	}
+	log.Debug().Msg("helm version")
+	v,err := new(Versions).getHelmChart(path)
+	kingpin.FatalIfError(err, "parsing chart yaml")
+	fmt.Print(v.Version)
+	return true
+}
+
+func HelmAppVer(path string) bool {
+	if path == "" {
+		return false
+	}
+	log.Debug().Msg("helm appVersion")
+	v,err := new(Versions).getHelmChart(path)
+	kingpin.FatalIfError(err, "parsing chart yaml")
+	fmt.Print(v.AppVersion)
+	return true
+}
+
+type Versions struct {
+	Version    string `yaml:"version"`
+	AppVersion string `yaml:"appVersion"`
+}
+
+func (c *Versions) getHelmChart(path string) (*Versions, error) {
+	yamlFile, err := ioutil.ReadFile(path)
+	if err != nil {
+		return c,fmt.Errorf("error while reading file, %s (%s)",path,err )
+	}
+	err = yaml.Unmarshal(yamlFile, c)
+	if err != nil {
+		return c,fmt.Errorf("error while reading 'version:' or 'appVersion:' (%s)", err )
+	}
+	return c, nil
+}
 
 func printMessage(message string){
 	if message != "" {

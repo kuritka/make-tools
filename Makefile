@@ -1,11 +1,11 @@
 # Set the shell to bash always
 SHELL := /bin/bash
-
+HELM_CHART_PATH := ./mychart/Chart.yaml
 init=@./make-tools --init -m "starting"
 save=@./make-tools --message "saving value" --save
 load=@./make-tools --debug --load
 exists=@./make-tools -m "environment variable doesn't exist" --env-exists
-X=load -l hello
+appver=`./make-tools --get-helm-appversion=$(HELM_CHART_PATH)`
 # Options
 
 export ENV_SECRET="secret"
@@ -19,6 +19,7 @@ t:
 	@echo
 	$(save) hello=SGVsbG8gZnJvbSBFTkNPREVE
 	@echo "the encoded message: `./make-tools -l hello | base64 -d`"
+	@echo "Current app version: $(appver)"
 
 
 
