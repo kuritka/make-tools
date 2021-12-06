@@ -89,6 +89,17 @@ func HelmAppVer(path string) bool {
 	return true
 }
 
+
+func FailIf(expression, message string) bool {
+	if expression == "" {
+		return false
+	}
+	log.Debug().Msgf("Fail if: %s", expression)
+	fmt.Print(message)
+	return true
+}
+
+
 type Versions struct {
 	Version    string `yaml:"version"`
 	AppVersion string `yaml:"appVersion"`

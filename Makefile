@@ -6,6 +6,8 @@ save=@./make-tools --message "saving value" --save
 load=@./make-tools --debug --load
 exists=@./make-tools -m "environment variable doesn't exist" --env-exists
 appver=`./make-tools --get-helm-appversion=$(HELM_CHART_PATH)`
+helmver=`./make-tools --get-helm-version=$(HELM_CHART_PATH)`
+killif=@./make-tools  -d --fail-if
 # Options
 
 export ENV_SECRET="secret"
@@ -19,7 +21,10 @@ t:
 	@echo
 	$(save) hello=SGVsbG8gZnJvbSBFTkNPREVE
 	@echo "the encoded message: `./make-tools -l hello | base64 -d`"
+
 	@echo "Current app version: $(appver)"
+	$(killif) a=b
+	@echo "Current app version: $(helmver)"
 
 
 

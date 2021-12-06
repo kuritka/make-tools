@@ -22,6 +22,7 @@ var (
 	initialize = app.Flag("init","").Short('i').Bool()
 	helmver = app.Flag("get-helm-version","Prints helm version from Chart.yaml").String()
 	appver = app.Flag("get-helm-appversion","Prints helm app version from Chart.yaml").String()
+	failif = app.Flag("fail-if","Fails if expression is true").Short('f').String()
 )
 
 var log = zerolog.Logger()
@@ -49,5 +50,7 @@ func main(){
 	if tools.HelmAppVer(*appver) {
 		return
 	}
-
+	if tools.FailIf(*failif, *message) {
+		os.Exit(1)
+	}
 }
