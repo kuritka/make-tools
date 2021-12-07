@@ -1,4 +1,4 @@
-module github.com/make-tools
+module github.com/kuritka/make-tools
 
 go 1.17
 
