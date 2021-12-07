@@ -10,6 +10,7 @@ helmver=`./make-tools --get-helm-version=$(HELM_CHART_PATH)`
 killif=@./make-tools  -d --fail-if
 # Options
 
+.ONSHELL:
 export ENV_SECRET="secret"
 t:
 	go build -o make-tools main.go
@@ -24,8 +25,7 @@ t:
 
 	@echo "Current app version: $(appver)"
 	$(killif) a=b
-	@echo "Current app version: $(helmver)"
-
+	@echo "Current helm version: $(helmver)"
 
 
 build: test
