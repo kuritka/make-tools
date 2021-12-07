@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/MakeTools/internal/tools"
-	"github.com/MakeTools/internal/utils/zerolog"
+	"github.com/kuritka/make-tools/internal/tools"
+	"github.com/kuritka/make-tools/internal/utils/zerolog"
 	z "github.com/rs/zerolog"
 	"os"
 	"path/filepath"

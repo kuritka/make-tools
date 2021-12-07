@@ -2,7 +2,7 @@ package envstorage
 
 import (
 	"encoding/json"
-	"github.com/MakeTools/internal/providers/storage"
+	"github.com/kuritka/make-tools/internal/providers/storage"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"os"
 )

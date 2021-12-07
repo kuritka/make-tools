@@ -2,8 +2,9 @@ package tools
 
 import (
 	"fmt"
-	"github.com/MakeTools/internal/providers/storage/tempstore"
-	"github.com/MakeTools/internal/utils/zerolog"
+	"github.com/kuritka/make-tools/internal/providers/storage/tempstore"
+	"github.com/kuritka/make-tools/internal/utils/zerolog"
+
 	"gopkg.in/alecthomas/kingpin.v2"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"

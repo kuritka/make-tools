@@ -3,8 +3,8 @@ package tempstore
 import (
 	"encoding/json"
 	"errors"
-	"github.com/MakeTools/internal/providers/storage"
-	"github.com/MakeTools/internal/utils/zerolog"
+	"github.com/kuritka/make-tools/internal/providers/storage"
+	"github.com/kuritka/make-tools/internal/utils/zerolog"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"os"
 )
