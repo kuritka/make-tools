@@ -1,38 +1,47 @@
 # make-tools 
 
 ```Makefile
+# Set the shell to bash always
 SHELL := /bin/bash
 
-init=@./make-tools --init -m "starting"
-save=@./make-tools --message "saving value" --save
-load=@./make-tools --debug --load
-exists=@./make-tools -m "environment variable doesn't exist" --env-exists
-# Options
+init= @ $(MK) --init
+exists= @ $(MK) -m "define environment variable" --env-exists
+save= @ $(MK) -d --save
+load= @ $(MK) --load
+HELM_CHART_PATH := ./mychart/Chart.yaml
+appver=`$(MK) --get-helm-appversion=$(HELM_CHART_PATH)`
+helmver=`$(MK) --get-helm-version=$(HELM_CHART_PATH)`
+killif=@ $(MK) -d --fail-if
 
 export ENV_SECRET="secret"
-t:
-	go build -o make-tools main.go
+
+my: maketools
 	$(init)
 	$(exists) ENV_SECRET
-	$(save) encoded1=`echo -n yyy | base64`
-	$(save) encoded2=`echo bubu | base64`
-	$(load) encoded1
+	$(save) encoded=`echo "hello from make-tools " | base64`
+	$(load) encoded
 	@echo
-	$(save) hello=SGVsbG8gZnJvbSBFTkNPREVE
-	@echo "the encoded message: `./make-tools -l hello | base64 -d`"
+	@echo "encoded message: `$(MK) -l encoded | base64 -d`"
+	@echo $(helmver)
+	$(killif) v$(appver)=v1.16.0
+	@echo v$(appver) $(helmver)
+
+# Tooling
+MK=$(shell which make-tools)
+
+maketools:
+	go install github.com/kuritka/make-tools@v0.0.4
 ```
 
 ```shell
-❯ make t
-go build -o make-tools main.go
-starting
-saving value
-saving value
-12:21PM DBG Debug mode enabled
-12:21PM DBG loaded 'encoded1':'eXl5'
-eXl5
-saving value
-the encoded message: Hello from ENCODED
-
-
+❯ make my
+go install github.com/kuritka/make-tools@v0.0.4
+4:25PM DBG Debug mode enabled
+4:25PM DBG saving data [encoded aGVsbG8gZnJvbSBtYWtlLXRvb2xzIAo ]
+aGVsbG8gZnJvbSBtYWtlLXRvb2xzIAo
+encoded message: hello from make-tools
+0.1.0
+4:25PM DBG Debug mode enabled
+4:25PM DBG Fail if: v1.16.0=v1.16.0
+make: *** [my] Error 1
 ```

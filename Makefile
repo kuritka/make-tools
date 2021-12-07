@@ -1,49 +1,30 @@
 # Set the shell to bash always
 SHELL := /bin/bash
-HELM_CHART_PATH := ./mychart/Chart.yaml
-init=@./make-tools --init -m "starting"
-save=@./make-tools --message "saving value" --save
-load=@./make-tools --debug --load
-exists=@./make-tools -m "environment variable doesn't exist" --env-exists
-appver=`./make-tools --get-helm-appversion=$(HELM_CHART_PATH)`
-helmver=`./make-tools --get-helm-version=$(HELM_CHART_PATH)`
-killif=@./make-tools  -d --fail-if
-# Options
 
-.ONSHELL:
+init= @ $(MK) --init
+exists= @ $(MK) -m "define environment variable" --env-exists
+save= @ $(MK) -d --save
+load= @ $(MK) --load
+HELM_CHART_PATH := ./mychart/Chart.yaml
+appver=`$(MK) --get-helm-appversion=$(HELM_CHART_PATH)`
+helmver=`$(MK) --get-helm-version=$(HELM_CHART_PATH)`
+killif=@ $(MK) -d --fail-if
+
 export ENV_SECRET="secret"
-t:
-	go build -o make-tools main.go
+
+my: maketools
 	$(init)
 	$(exists) ENV_SECRET
-	$(save) encoded1=`echo -n yyy | base64`
-	$(save) encoded2=`echo bubu | base64`
-	$(load) encoded1
+	$(save) encoded=`echo "hello from make-tools " | base64`
+	$(load) encoded
 	@echo
-	$(save) hello=SGVsbG8gZnJvbSBFTkNPREVE
-	@echo "the encoded message: `./make-tools -l hello | base64 -d`"
+	@echo "encoded message: `$(MK) -l encoded | base64 -d`"
+	@echo $(helmver)
+	$(killif) v$(appver)=v1.16.0
+	@echo v$(appver) $(helmver)
 
-	@echo "Current app version: $(appver)"
-	$(killif) a=b
-	@echo "Current helm version: $(helmver)"
+# Tooling
+MK=$(shell which make-tools)
 
-
-build: test
-	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o ./bin/make-tools main.go
-
-check: lint test
-
-lint:
-	$(LINT) run
-
-tidy:
-	go mod tidy
-
-test:
-	go test -v ./...
-
-# Tools
-
-LINT=$(shell which golangci-lint)
-
-.PHONY: tidy lint build run
+maketools:
+	go install github.com/kuritka/make-tools@v0.0.4
